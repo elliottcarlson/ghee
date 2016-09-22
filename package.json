@@ -1,6 +1,6 @@
 {
   "name": "ghee",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "ES6/ES7 Slack Bot Wrapper",
   "main": "lib/ghee.js",
   "scripts": {
@@ -17,7 +17,7 @@
     "es7",
     "decorator"
   ],
-  "author": "Elliott Carlson <x@sublim.nl>",
+  "author": "Elliott Carlson <ghee@sublim.nl>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/elliottcarlson/ghee/issues"
