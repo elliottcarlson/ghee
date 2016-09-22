@@ -2,7 +2,7 @@ import slack from '@slack/client';
 
 let listeners = {};
 
-class Bot {
+class Ghee {
   constructor(token) {
     this.slack = new slack.RtmClient(token, {
       dataStore: new slack.MemoryDataStore()
@@ -75,7 +75,7 @@ class Bot {
   }
 }
 
-function listen(target, key) {
+function ghee(target, key) {
   listeners[key] = target[key];
 }
 
@@ -83,4 +83,4 @@ String.prototype.startsWith = function(needle) {
   return(this.indexOf(needle) == 0);
 };
 
-module.exports = { Bot, listen };
+module.exports = { Ghee, ghee };
