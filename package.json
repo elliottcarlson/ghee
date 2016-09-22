@@ -1,0 +1,39 @@
+{
+  "name": "ghee",
+  "version": "0.0.1",
+  "description": "ES6/ES7 Slack Bot Wrapper",
+  "main": "lib/ghee.js",
+  "scripts": {
+    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elliottcarlson/ghee.git"
+  },
+  "keywords": [
+    "slack",
+    "bot",
+    "es7",
+    "decorator"
+  ],
+  "author": "Elliott Carlson <x@sublim.nl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elliottcarlson/ghee/issues"
+  },
+  "homepage": "https://github.com/elliottcarlson/ghee#readme",
+  "dependencies": {
+    "@slack/client": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
+}
