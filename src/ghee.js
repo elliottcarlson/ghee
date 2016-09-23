@@ -1,6 +1,6 @@
 import slack from '@slack/client';
 
-let listeners = {};
+const listeners = {};
 
 class Ghee {
   constructor(token) {
@@ -10,15 +10,15 @@ class Ghee {
 
     this.slack.start();
 
-    this.slack.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, this.loggedin());
-    this.slack.on(slack.RTM_EVENTS.MESSAGE, this.parser());
+    this.slack.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, this._loggedin());
+    this.slack.on(slack.RTM_EVENTS.MESSAGE, this._parser());
 
     this.name = null;
     this.id = null;
     this.prefix = null;
   }
 
-  loggedin() {
+  _loggedin() {
     let self = this;
 
     return (msg) => {
@@ -31,7 +31,7 @@ class Ghee {
     }
   }
 
-  is_registered(msg) {
+  _is_registered(msg) {
     let [ prefix ] = msg.split(' ');
 
     if (prefix.substring(1) in listeners) {
@@ -41,33 +41,34 @@ class Ghee {
     return false;
   }
 
-  parser() {
+  _parser() {
     let self = this;
 
     return (msg) => {
       if (msg.text.startsWith(`<@${self.id}>`) ||
+          msg.text.startsWith(`@${self.name}`) ||
           msg.text.startsWith(self.name) ||
           msg.text.startsWith(self.prefix)) {
 
         let [ prefix, method, ...params ] = msg.text.split(' ');
 
         if (method in listeners) {
-          self.sendMessage(msg, method, params);
+          self._sendMessage(msg, method, params);
         }
-      } else if (msg.text.startsWith('.') && self.is_registered(msg.text)) {
+      } else if (msg.text.startsWith('.') && self._is_registered(msg.text)) {
         let [ prefix, ...params ] = msg.text.split(' ');
         let method = prefix.substring(1);
 
-        self.sendMessage(msg, method, params);
+        self._sendMessage(msg, method, params);
       }
     }
   }
 
-  sendMessage(msg, method, params) {
+  _sendMessage(msg, method, params) {
     let from = this.slack.dataStore.getUserById(msg.user);
     let channel = this.slack.dataStore.getChannelGroupOrDMById(msg.channel);
 
-    let response = listeners[method](params, from, channel, msg);
+    let response = this[listeners[method]](params, from, channel, msg);
 
     if (response) {
       this.slack.sendMessage(response, msg.channel);
@@ -76,7 +77,7 @@ class Ghee {
 }
 
 function ghee(target, key) {
-  listeners[key] = target[key];
+  listeners[key] = key;
 }
 
 String.prototype.startsWith = function(needle) {
