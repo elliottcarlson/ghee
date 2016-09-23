@@ -1,5 +1,7 @@
 # ghee
----
+
+[![npm version](https://badge.fury.io/js/ghee.svg)](https://badge.fury.io/js/ghee)
+
 ghee is an ES6 based wrapper/helper for Slack's official client. It is
 specifically built to be used with ES7 decorators to make defining methods the
 bot can respond to easy to define without much overhead.
