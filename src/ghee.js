@@ -71,13 +71,23 @@ class Ghee {
     let response = this[listeners[method]](params, from, channel, msg);
 
     if (response) {
-      this.slack.sendMessage(response, msg.channel);
+      if (isPromise(response)) {
+        response.then((text) => {
+          this.slack.sendMessage(text, msg.channel);
+        });
+      } else {
+        this.slack.sendMessage(response, msg.channel);
+      }
     }
   }
 }
 
 function ghee(target, key) {
   listeners[key] = key;
+}
+
+function isPromise(obj) {
+  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 }
 
 String.prototype.startsWith = function(needle) {
