@@ -4,9 +4,13 @@ const listeners = {};
 
 class Ghee {
   constructor(token) {
+    this.token = token;
+
     this.slack = new slack.RtmClient(token, {
       dataStore: new slack.MemoryDataStore()
     });
+
+    this.web = new slack.WebClient(token);
 
     this.slack.start();
 
@@ -45,6 +49,8 @@ class Ghee {
     let self = this;
 
     return (msg) => {
+      if (!msg || !msg.text) return;
+
       if (msg.text.startsWith(`<@${self.id}>`) ||
           msg.text.startsWith(`@${self.name}`) ||
           msg.text.startsWith(self.name) ||
@@ -60,8 +66,22 @@ class Ghee {
         let method = prefix.substring(1);
 
         self._sendMessage(msg, method, params);
+      } else if ('catch_all' in listeners) {
+        self._sendMessage(msg, 'catch_all', msg.text);
       }
     }
+  }
+
+  _sendAttachment(attachment, channel) {
+    let payload = {
+      'type': 'message',
+      'channel': channel,
+      'as_user': true,
+      'parse': 'full',
+      'attachments': [ attachment.attachment ]
+    };
+
+    this.web.chat.postMessage(channel, null, payload);
   }
 
   _sendMessage(msg, method, params) {
@@ -72,9 +92,17 @@ class Ghee {
 
     if (response) {
       if (isPromise(response)) {
-        response.then((text) => {
-          this.slack.sendMessage(text, msg.channel);
+        response.then((data) => {
+          if (isAttachment(data)) {
+            this._sendAttachment(data, msg.channel);
+          } else {
+            this.slack.sendMessage(data, msg.channel);
+          }
+        }, (text) => {
+          this.slack.sendMessage(`:warning: ${text}`, msg.channel);
         });
+      } else if (isAttachment(response)) {
+        this._sendAttachment(response, msg.channel);
       } else {
         this.slack.sendMessage(response, msg.channel);
       }
@@ -88,6 +116,10 @@ function ghee(target, key) {
 
 function isPromise(obj) {
   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+}
+
+function isAttachment(obj) {
+  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.attachment === 'object';
 }
 
 String.prototype.startsWith = function(needle) {

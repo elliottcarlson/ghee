@@ -1,6 +1,6 @@
 {
   "name": "ghee",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "ES6/ES7 Slack Bot Wrapper",
   "main": "lib/ghee.js",
   "scripts": {
