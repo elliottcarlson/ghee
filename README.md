@@ -12,6 +12,11 @@ It started off as the basis for ghebot, a bot to assist in monitor and alerting
 for GitHub Enterprise. ghee is now the underlying framework for ghebot. Also,
 _it's clear to use and smooth as butter_.
 
+### Samples
+
+- [Sample Ghee Bot](https://github.com/elliottcarlson/sample-ghee-bot/)
+- [JiraBot](https://github.com/elliottcarlson/jirabot/)
+
 ### Install
 
 ```sh
