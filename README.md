@@ -14,7 +14,7 @@ _it's clear to use and smooth as butter_.
 
 ### Samples
 
-- [Sample Ghee Bot](https://github.com/elliottcarlson/sample-ghee-bot/)
+- [Sample Ghee Bot](https://github.com/elliottcarlson/ghee-sample-bot/)
 - [JiraBot](https://github.com/elliottcarlson/jirabot/)
 
 ### Install
