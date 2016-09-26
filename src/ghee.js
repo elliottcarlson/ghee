@@ -78,7 +78,8 @@ class Ghee {
       'channel': channel,
       'as_user': true,
       'parse': 'full',
-      'attachments': [ attachment.attachment ]
+      'text': (attachment.text) ? attachment.text : null,
+      'attachments': attachment.attachments
     };
 
     this.web.chat.postMessage(channel, null, payload);
@@ -119,7 +120,7 @@ function isPromise(obj) {
 }
 
 function isAttachment(obj) {
-  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.attachment === 'object';
+  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && 'hasAttachments' in obj && obj.hasAttachments;
 }
 
 String.prototype.startsWith = function(needle) {
