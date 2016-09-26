@@ -51,6 +51,10 @@ class Ghee {
     return (msg) => {
       if (!msg || !msg.text) return;
 
+      msg.text = msg.text.replace(/[\u2018\u2019]/g, '\'');
+      msg.text = msg.text.replace(/[\u201C\u201D]/g, '"');
+      msg.text = msg.text.replace(/\u2014/g, '--');
+
       if (msg.text.startsWith(`<@${self.id}>`) ||
           msg.text.startsWith(`@${self.name}`) ||
           msg.text.startsWith(self.name) ||
