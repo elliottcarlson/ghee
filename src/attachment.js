@@ -1,4 +1,23 @@
-export default class Attachment {
+export default class Attachments {
+  constructor() {
+    this.attachments = []
+    this.hasAttachments = true;
+    this.text = null;
+  }
+
+  add() {
+    let attachment = new Attachment();
+    this.attachments.push(attachment.attachment);
+
+    return attachment;
+  }
+
+  toString() {
+    return JSON.stringify(this.attachments, null, 2);
+  }
+}
+
+class Attachment {
   constructor() {
     this.attachment = {
       'mrkdwn_in': [ 'pretext', 'text', 'fields' ]
@@ -6,7 +25,7 @@ export default class Attachment {
   }
 
   toString() {
-    return JSON.stringify({ 'attachments': [ this.attachment ]});
+    return JSON.stringify(this.attachment, null, 2);
   }
 
   set fallback(value) {
@@ -149,15 +168,23 @@ export default class Attachment {
     return this.attachment.ts;
   }
 
-  addField(name, value, short = false) {
+  add_field(name, value, short = false) {
     if (!this.attachment.fields) {
       this.attachment.fields = [];
     }
 
-    this.attachment.fields.push({
-      'title': name,
-      'value': value,
-      'short': short
-    });
+    let field = new Field();
+    this.attachment.fields.push(field);
+    return field;
   }
 }
+
+class Field {
+  constructor() {
+    this.title = '';
+    this.value = '';
+    this.short = true;
+  }
+}
+
+
