@@ -1,7 +1,7 @@
 {
   "name": "ghee",
-  "version": "0.0.6",
-  "description": "ES6/ES7 Slack Bot Wrapper",
+  "version": "0.0.7",
+  "description": "ES7 Slack Bot Wrapper",
   "main": "lib/ghee.js",
   "scripts": {
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
