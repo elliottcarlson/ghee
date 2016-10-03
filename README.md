@@ -1,6 +1,8 @@
 # ghee
 
 [![npm version](https://badge.fury.io/js/ghee.svg)](https://badge.fury.io/js/ghee)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5c43cf385708406f9b1f112771314b89)](https://www.codacy.com/app/trendinteractive/ghee?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=elliottcarlson/ghee&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/5c43cf385708406f9b1f112771314b89)](https://www.codacy.com/app/trendinteractive/ghee?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=elliottcarlson/ghee&amp;utm_campaign=Badge_Coverage)
 
 _ghee_ is an ES7 based wrapper for Slack's official npm client. It is built with
 ease of implementation in mind, and utilizes ES7 decorators to easily define
