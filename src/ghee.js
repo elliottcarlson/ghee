@@ -3,14 +3,14 @@ import slack from '@slack/client';
 const listeners = {};
 
 export class Ghee {
-  constructor(token) {
+  constructor(token, RtmClient, WebClient) {
     this.token = token;
 
-    this.slack = new slack.RtmClient(token, {
+    this.slack = RtmClient || new slack.RtmClient(token, {
       dataStore: new slack.MemoryDataStore()
     });
 
-    this.web = new slack.WebClient(token);
+    this.web = WebClient || new slack.WebClient(token);
 
     this.slack.start();
 
