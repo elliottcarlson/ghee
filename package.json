@@ -6,7 +6,8 @@
   "scripts": {
     "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
     "test": "./node_modules/.bin/mocha --compilers js:babel-register",
-    "coverage": "./node_modules/.bin/istanbul --include-all-sources cover -x **/lib/** ./node_modules/.bin/_mocha -- --compilers js:babel-register"
+    "coverage": "./node_modules/.bin/istanbul --include-all-sources cover -x **/lib/** ./node_modules/.bin/_mocha -- --compilers js:babel-register",
+    "test-coverage": "npm run coverage && cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage && rm -rf ./coverage"
   },
   "repository": {
     "type": "git",
