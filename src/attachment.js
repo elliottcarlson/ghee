@@ -1,4 +1,4 @@
-export default class Attachments {
+export class Attachments {
   constructor() {
     this.attachments = []
     this.hasAttachments = true;
@@ -17,7 +17,7 @@ export default class Attachments {
   }
 }
 
-class Attachment {
+export class Attachment {
   constructor() {
     this.attachment = {
       'mrkdwn_in': [ 'pretext', 'text', 'fields' ]
@@ -168,8 +168,8 @@ class Attachment {
     return this.attachment.ts;
   }
 
-  add_field(name, value, short = false) {
-    if (!this.attachment.fields) {
+  add_field() {
+    if (!('fields' in this.attachment)) {
       this.attachment.fields = [];
     }
 
@@ -179,12 +179,10 @@ class Attachment {
   }
 }
 
-class Field {
+export class Field {
   constructor() {
     this.title = '';
     this.value = '';
     this.short = true;
   }
 }
-
-

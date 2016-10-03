@@ -2,7 +2,7 @@ import slack from '@slack/client';
 
 const listeners = {};
 
-class Ghee {
+export class Ghee {
   constructor(token) {
     this.token = token;
 
@@ -115,7 +115,7 @@ class Ghee {
   }
 }
 
-function ghee(target, key) {
+export function ghee(target, key) {
   listeners[key] = key;
 }
 
@@ -130,5 +130,3 @@ function isAttachment(obj) {
 String.prototype.startsWith = function(needle) {
   return(this.indexOf(needle) == 0);
 };
-
-module.exports = { Ghee, ghee };
