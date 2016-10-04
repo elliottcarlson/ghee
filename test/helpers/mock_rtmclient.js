@@ -1,7 +1,3 @@
-import sinon from 'sinon';
-
-global.sandbox = sinon.sandbox.create();
-
 export class Mock_RtmClient {
   constructor(token, autoReconnect, autoMark) {
     this.token = token;
@@ -9,6 +5,13 @@ export class Mock_RtmClient {
     this.start = sandbox.spy();
     this.login = sandbox.spy();
     this.on = sandbox.spy();
+
+    this.dataStore = {
+      getUserById: sandbox.spy(),
+      getChannelGroupOrDMById: sandbox.spy()
+    }
+
+    this.sendMessage = sandbox.spy();
 
     this.self = {
       id: 'ghee-id',
@@ -22,5 +25,4 @@ export class Mock_RtmClient {
     this.channels = {};
     this.groups = {};
   }
-
 }
