@@ -73,6 +73,10 @@ export class Ghee {
       } else if ('catch_all' in listeners) {
         self._sendMessage(msg, 'catch_all', msg.text);
       }
+
+      if ('*' in listeners) {
+        self._sendMessage(msg, '*', msg.text);
+      }
     }
   }
 
@@ -82,6 +86,7 @@ export class Ghee {
       'channel': channel,
       'as_user': true,
       'parse': 'full',
+      'link_names': 1,
       'text': (attachment.text) ? attachment.text : null,
       'attachments': attachment.attachments
     };
@@ -112,11 +117,19 @@ export class Ghee {
         this.slack.sendMessage(response, msg.channel);
       }
     }
+
+    return;
   }
 }
 
 export function ghee(target, key) {
-  listeners[key] = key;
+  if (!key) {
+    return (_target, _key) => {
+      listeners[target] = _key;
+    };
+  } else {
+    listeners[key] = key;
+  }
 }
 
 function isPromise(obj) {

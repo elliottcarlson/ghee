@@ -34,7 +34,12 @@ To use the `@ghee` decorator, you will need
 [babel-plugin-transform-decorators-legacy](https://www.npmjs.com/package/babel-preset-decorators-legacy).
 The [ghee-boilerplate](https://github.com/elliottcarlson/ghee-boilerplate/)
 provides all the files and references needed to quickly get setup to create
-your own bot. 
+your own bot.
+
+The ghee helper function will either register the method being decorated
+directly, or can be passed a parameter to register as the string to respond to.
+An special parameter of `*` will cause that method to receive all content and
+acts as a catch-all method.
 
 A straight-forward bot that will respond to `.hello` and `.goodbye` messages in
 Slack would look like:
@@ -51,8 +56,8 @@ Slack would look like:
             return 'Hello!';
         }
 
-        @ghee
-        goodbye() {
+        @ghee('goodbye')
+        other_method() {
             return 'Goodbye!';
         }
     }

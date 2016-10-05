@@ -306,6 +306,7 @@ describe('Ghee class', () => {
         'type': 'message',
         'channel': channel,
         'as_user': true,
+        'link_names': 1,
         'parse': 'full',
         'text': (attachment.text) ? attachment.text : null,
         'attachments': attachment.attachments
