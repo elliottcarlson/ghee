@@ -1,6 +1,6 @@
 {
   "name": "ghee",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "ES2016+ Slack Bot Framework",
   "main": "lib/ghee.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "chai-as-promised": "^6.0.0",
     "codacy-coverage": "2.0.0",
     "istanbul": "1.0.0-alpha.2",
+    "md5": "^2.2.1",
     "mocha": "3.1.0",
     "mocha-lcov-reporter": "1.2.0",
     "sinon": "1.17.6",

@@ -1,6 +1,8 @@
 import slack from '@slack/client';
+import http from 'http';
 
 const listeners = {};
+const webhooks = {};
 
 export class Ghee {
   constructor(token, RtmClient, WebClient) {
@@ -17,6 +19,17 @@ export class Ghee {
     this.slack.on(slack.CLIENT_EVENTS.RTM.AUTHENTICATED, this._loggedin());
     this.slack.on(slack.RTM_EVENTS.MESSAGE, this._parser());
 
+    if (Object.keys(webhooks).length) {
+      this.webhookServer = http.createServer(this._webhookHandler());
+      this.webhookServer.listen(process.env.PORT || 8080);
+
+      console.log(`Launching webhook listener on http://localhost:${process.env.PORT || 8080}.`);
+      for (webhook in webhooks) {
+        console.log(` * ${webhook} will call method '${webhooks[webhook].method}' and post to ${webhooks[webhook].channel}.`);
+      }
+      console.log('');
+    }
+
     this.name = null;
     this.id = null;
     this.prefix = null;
@@ -26,6 +39,8 @@ export class Ghee {
     let self = this;
 
     return (msg) => {
+      console.log(`Logged in to Slack as '${msg.self.name}'.`);
+
       self.name = msg.self.name;
       self.id = msg.self.id;
 
@@ -100,25 +115,57 @@ export class Ghee {
 
     let response = this[listeners[method]](params, from, channel, msg);
 
+    return this._messageHandler(response, msg.channel);
+  }
+
+  _messageHandler(response, channel) {
     if (response) {
       if (isPromise(response)) {
         response.then((data) => {
           if (isAttachment(data)) {
-            this._sendAttachment(data, msg.channel);
+            this._sendAttachment(data, channel);
           } else {
-            this.slack.sendMessage(data, msg.channel);
+            this.slack.sendMessage(data, channel);
           }
         }, (text) => {
-          this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+          this.slack.sendMessage(`:warning: ${text}`, channel);
         });
       } else if (isAttachment(response)) {
-        this._sendAttachment(response, msg.channel);
+        this._sendAttachment(response, channel);
       } else {
-        this.slack.sendMessage(response, msg.channel);
+        this.slack.sendMessage(response, channel);
       }
     }
 
     return;
+  }
+
+  _webhookHandler() {
+    let self = this;
+
+    return (request, response) => {
+      if (request.url in webhooks) {
+        let body = '';
+
+        request.on('data', (chunk) => {
+          body += chunk.toString();
+        });
+
+        request.on('end', () => {
+          let res = self[webhooks[request.url].method](body);
+          var channelName = webhooks[request.url].channel.replace(/^#/, '');
+          let channel = this.slack.dataStore.getChannelByName(channelName) ||
+            this.slack.dataStore.getGroupByName(channelName);
+
+          this._messageHandler(res, channel.id);
+        });
+      } else {
+        response.statusCode = 404;
+        response.statusMessage = 'Not Found';
+      }
+
+      response.end();
+    };
   }
 }
 
@@ -130,6 +177,20 @@ export function ghee(target, key) {
   } else {
     listeners[key] = key;
   }
+}
+
+export function webhook(target, key) {
+  let channel = target;
+
+  return (_target, _key) => {
+    let md5 = require('md5');
+    let path = `/webhook/${md5(channel + _key + _target)}`;
+
+    webhooks[path] = {
+      'channel': channel,
+      'method': _key
+    };
+  };
 }
 
 function isPromise(obj) {
