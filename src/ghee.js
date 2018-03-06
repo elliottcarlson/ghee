@@ -7,7 +7,7 @@ export class Ghee {
     this.token = token;
 
     this.slack = RtmClient || new slack.RtmClient(token, {
-      dataStore: new slack.MemoryDataStore()
+      dataStore: new slack.MemoryDataStore(),
     });
 
     this.web = WebClient || new slack.WebClient(token);
