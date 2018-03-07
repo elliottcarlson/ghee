@@ -1,7 +1,7 @@
 import slack from '@slack/client';
 import Promise from 'bluebird';
 
-const listeners = {};
+global._ghee_listeners = {};
 
 export class Ghee {
   constructor(token, RtmClient, WebClient) {
@@ -9,7 +9,7 @@ export class Ghee {
 
     this.slack = RtmClient || new slack.RtmClient(token, {
       useRtmConnect: true,
-      dataStore: false, //new slack.MemoryDataStore(),
+      dataStore: false,
     });
 
     this.web = WebClient || new slack.WebClient(token);
@@ -40,7 +40,7 @@ export class Ghee {
   _is_registered(msg) {
     let [ prefix ] = msg.split(' ');
 
-    if (prefix.substring(1) in listeners) {
+    if (prefix.substring(1) in global._ghee_listeners) {
       return true;
     }
 
@@ -51,8 +51,6 @@ export class Ghee {
     let self = this;
 
     return (msg) => {
-      console.log('_parser.msg()', msg);
-
       if (!msg || !msg.text) return;
 
       msg.text = msg.text.replace(/[\u2018\u2019]/g, '\'');
@@ -66,7 +64,7 @@ export class Ghee {
 
         let [ prefix, method, ...params ] = msg.text.split(' ');
 
-        if (method in listeners) {
+        if (method in global._ghee_listeners) {
           self._sendMessage(msg, method, params);
         }
       } else if (msg.text.startsWith('.') && self._is_registered(msg.text)) {
@@ -74,11 +72,11 @@ export class Ghee {
         let method = prefix.substring(1);
 
         self._sendMessage(msg, method, params);
-      } else if ('catch_all' in listeners) {
+      } else if ('catch_all' in global._ghee_listeners) {
         self._sendMessage(msg, 'catch_all', msg.text);
       }
 
-      if ('*' in listeners) {
+      if ('*' in global._ghee_listeners) {
         self._sendMessage(msg, '*', msg.text);
       }
     }
@@ -99,12 +97,12 @@ export class Ghee {
   }
 
   _sendMessage(msg, method, params) {
-    Promise.join(
+    return Promise.join(
       this.web.users.info(msg.user),
       this.web.conversations.info(msg.channel),
       (from, channel) => {
 
-      let response = this[listeners[method]](params, from.user, channel.channel, msg);
+      let response = this[global._ghee_listeners[method]](params, from.user, channel.channel, msg);
 
       if (response) {
         if (isPromise(response)) {
@@ -123,19 +121,17 @@ export class Ghee {
           this.slack.sendMessage(response, msg.channel);
         }
       }
-
-      return;
-    })
+    });
   }
 }
 
 export function ghee(target, key) {
   if (!key) {
     return (_target, _key) => {
-      listeners[target] = _key;
+      global._ghee_listeners[target] = _key;
     };
   } else {
-    listeners[key] = key;
+    global._ghee_listeners[key] = key;
   }
 }
 
