@@ -38,6 +38,21 @@ describe('Ghee class', () => {
     test_no_return_registered_method(args, from, channel, msg) { }
 
     catch_all(msg) { }
+
+    @ghee
+    test_decorated_method(args, from, channel, msg) {
+      return 'test_decorated_method';
+    }
+
+    @ghee('test_named_decorated_method')
+    test_an_alternative_named_decorated_method(args, from, channel, msg) {
+      return 'test_named_decorated_method';
+    }
+
+    @ghee('*')
+    test_star_decorated_method(args, from, channel, msg) {
+      return 'test_star_decorated_method';
+    }
   };
 
   ghee(Bot, 'test_registered_method');
@@ -160,13 +175,23 @@ describe('Ghee class', () => {
   describe('#_parser()', () => {
     let parser = instance._parser();
     let sendMessage = null;
+    let star_backup = null;
 
     beforeEach(() => {
       sendMessage = sinon.spy(instance, '_sendMessage');
+
+      if ('*' in global._ghee_listeners) {
+        star_backup = global._ghee_listeners['*'];
+        delete global._ghee_listeners['*'];
+      }
     });
 
     afterEach(() => {
       instance._sendMessage.restore();
+
+      if (star_backup) {
+        global._ghee_listeners['*'] = star_backup;
+      }
     });
 
     it('returns a function', () => {
@@ -277,8 +302,6 @@ describe('Ghee class', () => {
 
     it('will send to catch_all method if it is registered', () => {
       ghee(instance, 'catch_all');
-      let catch_all = sinon.spy(instance, 'catch_all');
-
       instance._is_registered('.catch_all').should.be.true;
 
       let msg = {
@@ -288,7 +311,20 @@ describe('Ghee class', () => {
       parser(msg);
 
       sendMessage.should.be.calledWithExactly(msg, 'catch_all', msg.text);
-      catch_all.should.be.called;
+    });
+
+    it('will send to a star decorated method if it is registered', () => {
+      if (star_backup) {
+        global._ghee_listeners['*'] = star_backup;
+      }
+
+      let msg = {
+        text: 'test'
+      };
+
+      parser(msg);
+
+      sendMessage.should.be.calledWithExactly(msg, '*', msg.text);
     });
   });
 
@@ -322,7 +358,11 @@ describe('Ghee class', () => {
     let test_registered_method = sinon.spy(instance, 'test_registered_method');
     let test_resolved_promise_registered_method = sinon.spy(instance, 'test_resolved_promise_registered_method');
     let test_rejected_promise_registered_method = sinon.spy(instance, 'test_rejected_promise_registered_method');
+    let test_decorated_method = sinon.spy(instance, 'test_decorated_method');
+    let test_an_alternative_named_decorated_method = sinon.spy(instance, 'test_an_alternative_named_decorated_method');
+    let test_star_decorated_method = sinon.spy(instance, 'test_star_decorated_method');
     //let test_no_return_regsitered_method = sinon.spy(instance, 'test_no_return_registered_method');
+
     let msg = {
       user: 12345,
       channel: 54321
@@ -336,34 +376,65 @@ describe('Ghee class', () => {
     it('calls a registered method with string as return value', () => {
       let method = 'test_registered_method';
 
-      instance._sendMessage(msg, method, params);
+      instance._sendMessage(msg, method, params).then(() => {
+        test_registered_method.should.be.called;
+        test_registered_method.should.have.returned(method);
 
-      test_registered_method.should.be.called;
-      test_registered_method.should.have.returned(method);
+        instance.slack.sendMessage.should.be.calledWithExactly(method, msg.channel);
+      });
 
-      instance.slack.sendMessage.should.be.calledWithExactly(method, msg.channel);
     });
 
     it('calls a registered method with a resolved promise', () => {
-      // TODO: Figure out how to see if slack.sendMessage was called
       let method = 'test_resolved_promise_registered_method';
 
-      instance._sendMessage(msg, method, params);
-
-      test_resolved_promise_registered_method.should.be.called;
-      test_resolved_promise_registered_method.should.have.returned(sinon.match.instanceOf(Promise));
+      instance._sendMessage(msg, method, params).then(() => {
+        test_resolved_promise_registered_method.should.be.called;
+        test_resolved_promise_registered_method.should.have.returned(sinon.match.instanceOf(Promise));
+      });
     });
 
     it('calls a registered method with a rejected promise', () => {
-      // TODO: Figure out how to see if slack.sendMessage was called
       let method = 'test_rejected_promise_registered_method';
 
-      instance._sendMessage(msg, method, params);
-
-      test_rejected_promise_registered_method.should.be.called;
-      test_rejected_promise_registered_method.should.have.returned(sinon.match.instanceOf(Promise));
+      instance._sendMessage(msg, method, params).then(() => {
+        test_rejected_promise_registered_method.should.be.called;
+        test_rejected_promise_registered_method.should.have.returned(sinon.match.instanceOf(Promise));
+      });
     });
 
+    it('calls a decorated method', () => {
+      let method = 'test_decorated_method';
+
+      instance._sendMessage(msg, method, params).then(() => {
+        test_decorated_method.should.be.called;
+        test_decorated_method.should.have.returned(method);
+
+        instance.slack.sendMessage.should.be.calledWithExactly(method, msg.channel);
+      });
+    });
+
+    it('calls a named decorated method', () => {
+      let method = 'test_named_decorated_method';
+
+      instance._sendMessage(msg, method, params).then(() => {
+        test_an_alternative_named_decorated_method.should.be.called;
+        test_an_alternative_named_decorated_method.should.have.returned(method);
+
+        instance.slack.sendMessage.should.be.calledWithExactly(method, msg.channel);
+      });
+    });
+
+    it('calls a * decorated catch all method', () => {
+      let method = 'test_star_decorated_method';
+
+      instance._sendMessage(msg, '*', params).then(() => {
+        test_star_decorated_method.should.be.called;
+        test_star_decorated_method.should.have.returned(method);
+
+        instance.slack.sendMessage.should.be.calledWithExactly(method, msg.channel);
+      });
+    });
   });
 });
 

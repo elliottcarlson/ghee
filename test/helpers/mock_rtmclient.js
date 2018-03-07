@@ -6,11 +6,6 @@ export class Mock_RtmClient {
     this.login = sandbox.spy();
     this.on = sandbox.spy();
 
-    this.dataStore = {
-      getUserById: sandbox.spy(),
-      getChannelGroupOrDMById: sandbox.spy()
-    }
-
     this.sendMessage = sandbox.spy();
 
     this.self = {

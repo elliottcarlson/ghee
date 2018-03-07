@@ -5,5 +5,21 @@ export class Mock_WebClient {
     this.chat = {
       postMessage: sandbox.spy()
     }
+
+    this.users = {
+      info: () => {
+        return Promise.resolve({
+          user: { }
+        })
+      }
+    }
+
+    this.conversations = {
+      info: () => {
+        return Promise.resolve({
+          channel: { }
+        })
+      }
+    }
   }
 }

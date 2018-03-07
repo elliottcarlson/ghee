@@ -1,5 +1,5 @@
 --colors
 --reporter spec
 --check-leaks
---compilers js:babel-register
+--require babel-core/register
 --recursive
