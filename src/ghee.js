@@ -1,4 +1,5 @@
 import slack from '@slack/client';
+import Promise from 'bluebird';
 
 const listeners = {};
 
@@ -7,7 +8,8 @@ export class Ghee {
     this.token = token;
 
     this.slack = RtmClient || new slack.RtmClient(token, {
-      dataStore: new slack.MemoryDataStore(),
+      useRtmConnect: true,
+      dataStore: false, //new slack.MemoryDataStore(),
     });
 
     this.web = WebClient || new slack.WebClient(token);
@@ -49,6 +51,8 @@ export class Ghee {
     let self = this;
 
     return (msg) => {
+      console.log('_parser.msg()', msg);
+
       if (!msg || !msg.text) return;
 
       msg.text = msg.text.replace(/[\u2018\u2019]/g, '\'');
@@ -95,30 +99,33 @@ export class Ghee {
   }
 
   _sendMessage(msg, method, params) {
-    let from = this.slack.dataStore.getUserById(msg.user);
-    let channel = this.slack.dataStore.getChannelGroupOrDMById(msg.channel);
+    Promise.join(
+      this.web.users.info(msg.user),
+      this.web.conversations.info(msg.channel),
+      (from, channel) => {
 
-    let response = this[listeners[method]](params, from, channel, msg);
+      let response = this[listeners[method]](params, from.user, channel.channel, msg);
 
-    if (response) {
-      if (isPromise(response)) {
-        response.then((data) => {
-          if (isAttachment(data)) {
-            this._sendAttachment(data, msg.channel);
-          } else {
-            this.slack.sendMessage(data, msg.channel);
-          }
-        }, (text) => {
-          this.slack.sendMessage(`:warning: ${text}`, msg.channel);
-        });
-      } else if (isAttachment(response)) {
-        this._sendAttachment(response, msg.channel);
-      } else {
-        this.slack.sendMessage(response, msg.channel);
+      if (response) {
+        if (isPromise(response)) {
+          response.then((data) => {
+            if (isAttachment(data)) {
+              this._sendAttachment(data, msg.channel);
+            } else {
+              this.slack.sendMessage(data, msg.channel);
+            }
+          }, (text) => {
+            this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+          });
+        } else if (isAttachment(response)) {
+          this._sendAttachment(response, msg.channel);
+        } else {
+          this.slack.sendMessage(response, msg.channel);
+        }
       }
-    }
 
-    return;
+      return;
+    })
   }
 }
 
