@@ -23,32 +23,32 @@ describe("Ghee class", () => {
       super(token, rtmclient, webclient);
     }
 
-    testRegisteredMethod(args, from, channel, msg) {
+    testRegisteredMethod() {
       return "testRegisteredMethod";
     }
 
-    testResolvedPromiseRegisteredMethod(args, from, channel, msg) {
+    testResolvedPromiseRegisteredMethod() {
       return Promise.resolve("testResolvedPromiseRegisteredMethod");
     }
 
-    testRejectedPromiseRegisteredMethod(args, from, channel, msg) {
+    testRejectedPromiseRegisteredMethod() {
       return Promise.reject("testResolvedPromiseRegisteredMethod");
     }
 
-    testNoReturnRegisteredMethod(args, from, channel, msg) { }
+    testNoReturnRegisteredMethod() { }
 
     @ghee
-    testDecoratedMethod(args, from, channel, msg) {
+    testDecoratedMethod() {
       return "testDecoratedMethod";
     }
 
     @ghee("testNamedDecoratedMethod")
-    testAnAlternativeNamedDecoratedMethod(args, from, channel, msg) {
+    testAnAlternativeNamedDecoratedMethod() {
       return "testNamedDecoratedMethod";
     }
 
     @ghee("*")
-    testStarDecoratedMethod(args, from, channel, msg) {
+    testStarDecoratedMethod() {
       return "testStarDecoratedMethod";
     }
   };
@@ -324,7 +324,7 @@ describe("Ghee class", () => {
 
       let payload = {
         "type": "message",
-        "channel": channel,
+        channel,
         "as_user": true,
         "link_names": 1,
         "parse": "full",
@@ -433,7 +433,7 @@ describe("ghee decorator", () => {
         super(token, rtmclient, webclient);
       }
 
-      testRegisteredMethod(args, from, channel, msg) { }
+      testRegisteredMethod() { }
     };
     let instance = new Bot(token, rtmclient, webclient);
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 export class MockRtmClient {
   constructor(token, autoReconnect, autoMark) {
     this.token = token;
@@ -11,11 +12,11 @@ export class MockRtmClient {
     this.self = {
       id: 'ghee-id',
       name: 'Ghee'
-    }
+    };
 
     this.team = {
       name: 'Ghee'
-    }
+    };
 
     this.channels = {};
     this.groups = {};

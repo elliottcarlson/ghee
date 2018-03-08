@@ -17,7 +17,7 @@ export class Ghee {
 
     this.slack = RtmClient || new slack.RtmClient(token, {
       useRtmConnect: true,
-      dataStore: false,
+      dataStore: false
     });
 
     this.web = WebClient || new slack.WebClient(token);
@@ -112,15 +112,15 @@ export class Ghee {
 
       if (response) {
         if (isPromise(response)) {
-          response.then((data) => {
-            if (isAttachment(data)) {
-              this._sendAttachment(data, msg.channel);
-            } else {
-              this.slack.sendMessage(data, msg.channel);
-            }
-          }, (text) => {
-            this.slack.sendMessage(`:warning: ${text}`, msg.channel);
-          });
+            response.then((data) => {
+              if (isAttachment(data)) {
+                this._sendAttachment(data, msg.channel);
+              } else {
+                this.slack.sendMessage(data, msg.channel);
+              }
+            }, (text) => {
+              this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+            });
         } else if (isAttachment(response)) {
           this._sendAttachment(response, msg.channel);
         } else {
@@ -141,6 +141,6 @@ export function ghee(target, key) {
   }
 }
 
-String.prototype.startsWith = function(needle) {
+String.prototype.startsWith = function(needle) { // eslint-disable-line no-extend-native
   return(this.indexOf(needle) === 0);
 };

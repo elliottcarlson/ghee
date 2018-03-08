@@ -126,7 +126,7 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.fallback = "modified";
       }
 
@@ -542,7 +542,7 @@ describe("Attachment", () => {
     });
 
     it("can have multiple fields", () => {
-      let field = attachment.addField();
+      attachment.addField();
 
       attachment.attachment.fields.should.have.lengthOf(2);
     });

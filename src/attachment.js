@@ -1,26 +1,7 @@
-export class Attachments {
-  constructor() {
-    this.attachments = []
-    this.hasAttachments = true;
-    this.text = null;
-  }
-
-  add() {
-    let attachment = new Attachment();
-    this.attachments.push(attachment.attachment);
-
-    return attachment;
-  }
-
-  toString() {
-    return JSON.stringify(this.attachments, null, 2);
-  }
-}
-
 export class Attachment {
   constructor() {
     this.attachment = {
-      'mrkdwn_in': [ 'pretext', 'text', 'fields' ]
+      "mrkdwn_in": [ "pretext", "text", "fields" ]
     };
   }
 
@@ -169,7 +150,7 @@ export class Attachment {
   }
 
   addField() {
-    if (!('fields' in this.attachment)) {
+    if (!("fields" in this.attachment)) {
       this.attachment.fields = [];
     }
 
@@ -179,10 +160,29 @@ export class Attachment {
   }
 }
 
+export class Attachments {
+  constructor() {
+    this.attachments = []
+    this.hasAttachments = true;
+    this.text = null;
+  }
+
+  add() {
+    let attachment = new Attachment();
+    this.attachments.push(attachment.attachment);
+
+    return attachment;
+  }
+
+  toString() {
+    return JSON.stringify(this.attachments, null, 2);
+  }
+}
+
 export class Field {
   constructor() {
-    this.title = '';
-    this.value = '';
+    this.title = "";
+    this.value = "";
     this.short = true;
   }
 }
