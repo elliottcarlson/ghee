@@ -1,4 +1,4 @@
-export class Mock_WebClient {
+export class MockWebClient {
   constructor(token) {
     this.token = token;
 

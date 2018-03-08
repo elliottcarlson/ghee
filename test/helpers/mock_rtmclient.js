@@ -1,4 +1,4 @@
-export class Mock_RtmClient {
+export class MockRtmClient {
   constructor(token, autoReconnect, autoMark) {
     this.token = token;
 
