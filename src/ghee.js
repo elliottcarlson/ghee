@@ -70,7 +70,7 @@ export class Ghee {
           msg.text.startsWith(self.name) ||
           msg.text.startsWith(self.prefix)) {
 
-        let [ prefix, method, ...params ] = msg.text.split(" ");
+        let [ , method, ...params ] = msg.text.split(" ");
 
         if (method in global._ghee_listeners) {
           self._sendMessage(msg, method, params);

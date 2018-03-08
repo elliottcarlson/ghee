@@ -120,7 +120,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.fallback = undefined;
+      delete attachment.fallback;
 
       attachment.fallback.should.not.be.undefined;
     });
@@ -150,7 +150,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.color = undefined;
+      delete attachment.color;
 
       attachment.color.should.not.be.undefined;
     });
@@ -180,7 +180,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.pretext = undefined;
+      delete attachment.pretext;
 
       attachment.pretext.should.not.be.undefined;
     });
@@ -210,7 +210,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.authorName = undefined;
+      delete attachment.authorName;
 
       attachment.authorName.should.not.be.undefined;
     });
@@ -240,7 +240,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.authorLink = undefined;
+      delete attachment.authorLink;
 
       attachment.authorLink.should.not.be.undefined;
     });
@@ -270,7 +270,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.authorIcon = undefined;
+      delete attachment.authorIcon;
 
       attachment.authorIcon.should.not.be.undefined;
     });
@@ -300,7 +300,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.title = undefined;
+      delete attachment.title;
 
       attachment.title.should.not.be.undefined;
     });
@@ -330,7 +330,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.titleLink = undefined;
+      delete attachment.titleLink;
 
       attachment.titleLink.should.not.be.undefined;
     });
@@ -360,7 +360,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.text = undefined;
+      delete attachment.text;
 
       attachment.text.should.not.be.undefined;
     });
@@ -390,7 +390,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.imageURL = undefined;
+      delete attachment.imageURL;
 
       attachment.imageURL.should.not.be.undefined;
     });
@@ -420,7 +420,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.thumbURL = undefined;
+      delete attachment.thumbURL;
 
       attachment.thumbURL.should.not.be.undefined;
     });
@@ -450,7 +450,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.footer = undefined;
+      delete attachment.footer;
 
       attachment.footer.should.not.be.undefined;
     });
@@ -480,7 +480,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.footerIcon = undefined;
+      delete attachment.footerIcon;
 
       attachment.footerIcon.should.not.be.undefined;
     });
@@ -510,7 +510,7 @@ describe("Attachment", () => {
     });
 
     it("doesn't do anything when changed to undefined", () => {
-      attachment.timestamp = undefined;
+      delete attachment.timestamp;
 
       attachment.timestamp.should.not.be.undefined;
     });
