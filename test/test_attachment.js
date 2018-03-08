@@ -52,7 +52,7 @@ describe("Attachments", () => {
     let attachments = new Attachments();
 
     it("should return attachments property as string", () => {
-      attachments.toString().should.equal(`[]`);
+      attachments.toString().should.equal("[]");
     });
   });
 });
@@ -128,7 +128,7 @@ describe("Attachment", () => {
     it("modifies the attachment property", () => {
       let fn = function() {
         attachment.fallback = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "fallback");
     });
@@ -156,9 +156,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.color = "#0000FF";
-      }
+      };
 
       fn.should.change(attachment.attachment, "color");
     });
@@ -186,9 +186,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.pretext = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "pretext");
     });
@@ -216,9 +216,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.authorName = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "authorName");
     });
@@ -246,9 +246,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.authorLink = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "authorLink");
     });
@@ -276,9 +276,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.authorIcon = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "authorIcon");
     });
@@ -306,9 +306,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.title = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "title");
     });
@@ -336,9 +336,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.titleLink = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "titleLink");
     });
@@ -366,9 +366,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.text = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "text");
     });
@@ -396,9 +396,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.imageURL = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "imageURL");
     });
@@ -426,9 +426,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.thumbURL = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "thumbURL");
     });
@@ -456,9 +456,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.footer = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "footer");
     });
@@ -486,9 +486,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.footerIcon = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "footerIcon");
     });
@@ -516,9 +516,9 @@ describe("Attachment", () => {
     });
 
     it("modifies the attachment property", () => {
-      var fn = function() {
+      let fn = function() {
         attachment.timestamp = "modified";
-      }
+      };
 
       fn.should.change(attachment.attachment, "ts");
     });

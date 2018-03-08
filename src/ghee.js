@@ -1,7 +1,7 @@
 import slack from "@slack/client";
 import Promise from "bluebird";
 
-global._ghee_listeners = {};
+global._gheeListeners = {};
 
 function isAttachment(obj) {
   return !!obj && (typeof obj === "object" || typeof obj === "function") && "hasAttachments" in obj && obj.hasAttachments;
@@ -42,13 +42,13 @@ export class Ghee {
       if (!self.prefix) {
         self.prefix = `.${self.name}`;
       }
-    }
+    };
   }
 
   _isRegistered(msg) {
     let [ prefix ] = msg.split(" ");
 
-    if (prefix.substring(1) in global._ghee_listeners) {
+    if (prefix.substring(1) in global._gheeListeners) {
       return true;
     }
 
@@ -59,7 +59,7 @@ export class Ghee {
     let self = this;
 
     return (msg) => {
-      if (!msg || !msg.text) return;
+      if (!msg || !msg.text) { return; }
 
       msg.text = msg.text.replace(/[\u2018\u2019]/g, "'");
       msg.text = msg.text.replace(/[\u201C\u201D]/g, "\"");
@@ -72,7 +72,7 @@ export class Ghee {
 
         let [ , method, ...params ] = msg.text.split(" ");
 
-        if (method in global._ghee_listeners) {
+        if (method in global._gheeListeners) {
           self._sendMessage(msg, method, params);
         }
       } else if (msg.text.startsWith(".") && self._isRegistered(msg.text)) {
@@ -82,7 +82,7 @@ export class Ghee {
         self._sendMessage(msg, method, params);
       }
 
-      if ("*" in global._ghee_listeners) {
+      if ("*" in global._gheeListeners) {
         self._sendMessage(msg, "*", msg.text);
       }
     }
@@ -108,36 +108,36 @@ export class Ghee {
       this.web.conversations.info(msg.channel),
       (from, channel) => {
 
-      let response = this[global._ghee_listeners[method]](params, from.user, channel.channel, msg);
+        let response = this[global._gheeListeners[method]](params, from.user, channel.channel, msg);
 
-      if (response) {
-        if (isPromise(response)) {
-            response.then((data) => {
-              if (isAttachment(data)) {
-                this._sendAttachment(data, msg.channel);
-              } else {
-                this.slack.sendMessage(data, msg.channel);
-              }
-            }, (text) => {
-              this.slack.sendMessage(`:warning: ${text}`, msg.channel);
-            });
-        } else if (isAttachment(response)) {
-          this._sendAttachment(response, msg.channel);
-        } else {
-          this.slack.sendMessage(response, msg.channel);
+        if (response) {
+          if (isPromise(response)) {
+              response.then((data) => {
+                if (isAttachment(data)) {
+                  this._sendAttachment(data, msg.channel);
+                } else {
+                  this.slack.sendMessage(data, msg.channel);
+                }
+              }, (text) => {
+                this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+              });
+          } else if (isAttachment(response)) {
+            this._sendAttachment(response, msg.channel);
+          } else {
+            this.slack.sendMessage(response, msg.channel);
+          }
         }
-      }
-    });
+      });
   }
 }
 
 export function ghee(target, key) {
   if (!key) {
     return (_target, _key) => {
-      global._ghee_listeners[target] = _key;
+      global._gheeListeners[target] = _key;
     };
   } else {
-    global._ghee_listeners[key] = key;
+    global._gheeListeners[key] = key;
   }
 }
 

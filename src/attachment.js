@@ -1,3 +1,11 @@
+export class Field {
+  constructor() {
+    this.title = "";
+    this.value = "";
+    this.short = true;
+  }
+}
+
 export class Attachment {
   constructor() {
     this.attachment = {
@@ -162,7 +170,7 @@ export class Attachment {
 
 export class Attachments {
   constructor() {
-    this.attachments = []
+    this.attachments = [];
     this.hasAttachments = true;
     this.text = null;
   }
@@ -176,13 +184,5 @@ export class Attachments {
 
   toString() {
     return JSON.stringify(this.attachments, null, 2);
-  }
-}
-
-export class Field {
-  constructor() {
-    this.title = "";
-    this.value = "";
-    this.short = true;
   }
 }

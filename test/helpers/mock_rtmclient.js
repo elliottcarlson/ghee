@@ -1,6 +1,9 @@
 /* eslint-disable no-undef */
 export class MockRtmClient {
   constructor(token, autoReconnect, autoMark) {
+    this.autoReconnect = autoReconnect;
+    this.autoMark = autoMark;
+
     this.token = token;
 
     this.start = sandbox.spy();
@@ -10,12 +13,12 @@ export class MockRtmClient {
     this.sendMessage = sandbox.spy();
 
     this.self = {
-      id: 'ghee-id',
-      name: 'Ghee'
+      id: "ghee-id",
+      name: "Ghee"
     };
 
     this.team = {
-      name: 'Ghee'
+      name: "Ghee"
     };
 
     this.channels = {};

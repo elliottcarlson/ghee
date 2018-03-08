@@ -145,7 +145,7 @@ describe("Ghee class", () => {
             id: `${testId}__2`,
             name: `${testName}__2`
           }
-        }
+        };
 
         loggedin(msg);
       };
@@ -177,9 +177,9 @@ describe("Ghee class", () => {
     beforeEach(() => {
       _sendMessage = sinon.spy(instance, "_sendMessage");
 
-      if ("*" in global._ghee_listeners) {
-        starBackup = global._ghee_listeners["*"];
-        delete global._ghee_listeners["*"];
+      if ("*" in global._gheeListeners) {
+        starBackup = global._gheeListeners["*"];
+        delete global._gheeListeners["*"];
       }
     });
 
@@ -187,7 +187,7 @@ describe("Ghee class", () => {
       instance._sendMessage.restore();
 
       if (starBackup) {
-        global._ghee_listeners["*"] = starBackup;
+        global._gheeListeners["*"] = starBackup;
       }
     });
 
@@ -299,7 +299,7 @@ describe("Ghee class", () => {
 
     it("will send to a star decorated method if it is registered", () => {
       if (starBackup) {
-        global._ghee_listeners["*"] = starBackup;
+        global._gheeListeners["*"] = starBackup;
       }
 
       let msg = {
@@ -318,7 +318,7 @@ describe("Ghee class", () => {
       let text = Math.random().toString(36).substr(2, 20);
 
       let attachment = {
-        text: text,
+        text,
         attachments: [ ]
       };
 
