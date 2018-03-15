@@ -415,7 +415,7 @@ describe("ghee decorator", () => {
     it("can register a new listener", () => {
       ghee(Object, "testRegisteredMethod");
 
-      global._gheeListeners.should.be.an('object').that.has.a.property("testRegisteredMethod");
+      global._gheeListeners.should.be.an("object").that.has.a.property("testRegisteredMethod");
     });
   });
 });
