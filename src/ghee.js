@@ -112,15 +112,15 @@ export class Ghee {
 
         if (response) {
           if (isPromise(response)) {
-              response.then((data) => {
-                if (isAttachment(data)) {
-                  this._sendAttachment(data, msg.channel);
-                } else {
-                  this.slack.sendMessage(data, msg.channel);
-                }
-              }, (text) => {
-                this.slack.sendMessage(`:warning: ${text}`, msg.channel);
-              });
+            response.then((data) => {
+              if (isAttachment(data)) {
+                this._sendAttachment(data, msg.channel);
+              } else {
+                this.slack.sendMessage(data, msg.channel);
+              }
+            }, (text) => {
+              this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+            });
           } else if (isAttachment(response)) {
             this._sendAttachment(response, msg.channel);
           } else {
