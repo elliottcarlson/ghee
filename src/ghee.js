@@ -45,6 +45,16 @@ export class Ghee {
     };
   }
 
+  _isRegistered(msg) {
+    let [ prefix ] = msg.split(" ");
+
+    if (prefix.substring(this.prefix.length) in global._gheeListeners) {
+      return true;
+    }
+
+    return false;
+  }
+
   _parser() {
     let self = this;
 
@@ -57,13 +67,19 @@ export class Ghee {
 
       if (msg.text.startsWith(`<@${self.id}>`) ||
           msg.text.startsWith(`@${self.name}`) ||
-          msg.text.startsWith(self.name) ||
-          msg.text.startsWith(self.prefix)) {
+          msg.text.startsWith(self.name)) {
         let [ , method, ...params ] = msg.text.split(" ");
 
         if (method in global._gheeListeners) {
           self._sendMessage(msg, method, params);
         }
+      } else if (
+          msg.text.startsWith(self.prefix) &&
+          self._isRegistered(msg.text)) {
+        let [ prefix, ...params ] = msg.text.split(" ");
+        let method = prefix.substring(this.prefix.length);
+
+        self._sendMessage(msg, method, params);
       }
 
       if ("*" in global._gheeListeners) {

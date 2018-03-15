@@ -157,6 +157,18 @@ describe("Ghee class", () => {
     });
   });
 
+  describe("#_isRegistered()", () => {
+    let testKey = "testRegisteredMethod";
+
+    it("finds a registered key", () => {
+      instance._isRegistered(`.${testKey}`).should.be.true;
+    });
+
+    it("does not find a non-registered key", () => {
+      instance._isRegistered("not a registered key").should.be.false;
+    });
+  });
+
   describe("#_parser()", () => {
     let parser = instance._parser();
     let _sendMessage = null;
@@ -251,7 +263,7 @@ describe("Ghee class", () => {
       let params = [ "test", "params" ];
       let paramsS = params.join(" ");
       let msg = {
-        text: `${instance.prefix} ${method} ${paramsS}`
+        text: `${instance.prefix}${method} ${paramsS}`
       };
 
       parser(msg);
