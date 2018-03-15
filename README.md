@@ -2,9 +2,6 @@
 
 A simple bot framework for [Slack](http://www.slack.com) written in ES2016+.
 
-__ghee is actively in development and breaking changes may occur until release
-1.0__
-
 ## Installation
 
 Via npm
@@ -105,8 +102,7 @@ a command call using the following syntaxes:
 * @-mention _command_ _(optional parameters)_
 * @bot-name _command_ _(optional parameters)_
 * bot-name: _command_ _(optional parameters)_
-* .prefix _command_ _(optional parameters)_
-* ._command_ _(optional parameters)_
+* prefix _command_ _(optional parameters)_
 
 If the _command_ has been registered via the `ghee` helper, then the method will
 be called with the following parameters:
@@ -138,13 +134,11 @@ information on Attachments and Promises.
 
 ## Why "_ghee_"?
 
-It started off as the basis for ghebot, a bot to assist in monitor and alerting
-for GitHub Enterprise. ghee is now the underlying framework for ghebot. Also,
-_it's clear to use and smooth as butter_.
+Why not? _it's clear to use and smooth as butter_.
 
 ## Samples
 
 - [ghee boilerplate](https://github.com/elliottcarlson/ghee-boilerplate/)
 - [Sample ghee bot](https://github.com/elliottcarlson/ghee-sample-bot/)
 - [JiraBot](https://github.com/elliottcarlson/jirabot/)
-
+- [IncidentBot](https://github.com/elliottcarlson/incidentbot/)

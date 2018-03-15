@@ -1,7 +1,15 @@
-import slack from '@slack/client';
-import Promise from 'bluebird';
+import slack from "@slack/client";
+import Promise from "bluebird";
 
-global._ghee_listeners = {};
+global._gheeListeners = {};
+
+function isAttachment(obj) {
+  return !!obj && (typeof obj === "object" || typeof obj === "function") && "hasAttachments" in obj && obj.hasAttachments;
+}
+
+function isPromise(obj) {
+  return !!obj && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function";
+}
 
 export class Ghee {
   constructor(token, RtmClient, WebClient) {
@@ -9,7 +17,7 @@ export class Ghee {
 
     this.slack = RtmClient || new slack.RtmClient(token, {
       useRtmConnect: true,
-      dataStore: false,
+      dataStore: false
     });
 
     this.web = WebClient || new slack.WebClient(token);
@@ -32,26 +40,20 @@ export class Ghee {
       self.id = msg.self.id;
 
       if (!self.prefix) {
-        self.prefix = `.${self.name}`;
+        self.prefix = ".";
       }
-    }
-  }
-
-  _is_registered(msg) {
-    let [ prefix ] = msg.split(' ');
-
-    if (prefix.substring(1) in global._ghee_listeners) {
-      return true;
-    }
-
-    return false;
+    };
   }
 
   _parser() {
     let self = this;
 
     return (msg) => {
-      if (!msg || !msg.text) return;
+      if (!msg || !msg.text) { return; }
+
+      msg.text = msg.text.replace(/[\u2018\u2019]/g, "'");
+      msg.text = msg.text.replace(/[\u201C\u201D]/g, "\"");
+      msg.text = msg.text.replace(/\u2014/g, "--");
 
       msg.text = msg.text.replace(/[\u2018\u2019]/g, '\'');
       msg.text = msg.text.replace(/[\u201C\u201D]/g, '"');
@@ -61,36 +63,28 @@ export class Ghee {
           msg.text.startsWith(`@${self.name}`) ||
           msg.text.startsWith(self.name) ||
           msg.text.startsWith(self.prefix)) {
+        let [ , method, ...params ] = msg.text.split(" ");
 
-        let [ prefix, method, ...params ] = msg.text.split(' ');
-
-        if (method in global._ghee_listeners) {
+        if (method in global._gheeListeners) {
           self._sendMessage(msg, method, params);
         }
-      } else if (msg.text.startsWith('.') && self._is_registered(msg.text)) {
-        let [ prefix, ...params ] = msg.text.split(' ');
-        let method = prefix.substring(1);
-
-        self._sendMessage(msg, method, params);
-      } else if ('catch_all' in global._ghee_listeners) {
-        self._sendMessage(msg, 'catch_all', msg.text);
       }
 
-      if ('*' in global._ghee_listeners) {
-        self._sendMessage(msg, '*', msg.text);
+      if ("*" in global._gheeListeners) {
+        self._sendMessage(msg, "*", msg.text);
       }
-    }
+    };
   }
 
   _sendAttachment(attachment, channel) {
     let payload = {
-      'type': 'message',
-      'channel': channel,
-      'as_user': true,
-      'parse': 'full',
-      'link_names': 1,
-      'text': (attachment.text) ? attachment.text : null,
-      'attachments': attachment.attachments
+      "type": "message",
+      channel,
+      "as_user": true,
+      "parse": "full",
+      "link_names": 1,
+      "text": (attachment.text) ? attachment.text : null,
+      "attachments": attachment.attachments
     };
 
     this.web.chat.postMessage(channel, null, payload);
@@ -101,48 +95,39 @@ export class Ghee {
       this.web.users.info(msg.user),
       this.web.conversations.info(msg.channel),
       (from, channel) => {
+        let response = this[global._gheeListeners[method]](params, from.user, channel.channel, msg);
 
-      let response = this[global._ghee_listeners[method]](params, from.user, channel.channel, msg);
-
-      if (response) {
-        if (isPromise(response)) {
-          response.then((data) => {
-            if (isAttachment(data)) {
-              this._sendAttachment(data, msg.channel);
-            } else {
-              this.slack.sendMessage(data, msg.channel);
-            }
-          }, (text) => {
-            this.slack.sendMessage(`:warning: ${text}`, msg.channel);
-          });
-        } else if (isAttachment(response)) {
-          this._sendAttachment(response, msg.channel);
-        } else {
-          this.slack.sendMessage(response, msg.channel);
+        if (response) {
+          if (isPromise(response)) {
+            response.then((data) => {
+              if (isAttachment(data)) {
+                this._sendAttachment(data, msg.channel);
+              } else {
+                this.slack.sendMessage(data, msg.channel);
+              }
+            }, (text) => {
+              this.slack.sendMessage(`:warning: ${text}`, msg.channel);
+            });
+          } else if (isAttachment(response)) {
+            this._sendAttachment(response, msg.channel);
+          } else {
+            this.slack.sendMessage(response, msg.channel);
+          }
         }
-      }
-    });
+      });
   }
 }
 
 export function ghee(target, key) {
   if (!key) {
     return (_target, _key) => {
-      global._ghee_listeners[target] = _key;
+      global._gheeListeners[target] = _key;
     };
   } else {
-    global._ghee_listeners[key] = key;
+    global._gheeListeners[key] = key;
   }
 }
 
-function isPromise(obj) {
-  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
-}
-
-function isAttachment(obj) {
-  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && 'hasAttachments' in obj && obj.hasAttachments;
-}
-
-String.prototype.startsWith = function(needle) {
+String.prototype.startsWith = function(needle) { // eslint-disable-line no-extend-native
   return(this.indexOf(needle) === 0);
 };
