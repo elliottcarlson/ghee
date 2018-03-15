@@ -45,16 +45,6 @@ export class Ghee {
     };
   }
 
-  _isRegistered(msg) {
-    let [ prefix ] = msg.split(" ");
-
-    if (prefix.substring(1) in global._gheeListeners) {
-      return true;
-    }
-
-    return false;
-  }
-
   _parser() {
     let self = this;
 
@@ -69,23 +59,17 @@ export class Ghee {
           msg.text.startsWith(`@${self.name}`) ||
           msg.text.startsWith(self.name) ||
           msg.text.startsWith(self.prefix)) {
-
         let [ , method, ...params ] = msg.text.split(" ");
 
         if (method in global._gheeListeners) {
           self._sendMessage(msg, method, params);
         }
-      } else if (msg.text.startsWith(".") && self._isRegistered(msg.text)) {
-        let [ prefix, ...params ] = msg.text.split(" ");
-        let method = prefix.substring(1);
-
-        self._sendMessage(msg, method, params);
       }
 
       if ("*" in global._gheeListeners) {
         self._sendMessage(msg, "*", msg.text);
       }
-    }
+    };
   }
 
   _sendAttachment(attachment, channel) {

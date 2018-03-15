@@ -157,18 +157,6 @@ describe("Ghee class", () => {
     });
   });
 
-  describe("#_isRegistered()", () => {
-    let testKey = "testRegisteredMethod";
-
-    it("finds a registered key", () => {
-      instance._isRegistered(`.${testKey}`).should.be.true;
-    });
-
-    it("does not find a non-registered key", () => {
-      instance._isRegistered("not a registered key").should.be.false;
-    });
-  });
-
   describe("#_parser()", () => {
     let parser = instance._parser();
     let _sendMessage = null;
@@ -264,19 +252,6 @@ describe("Ghee class", () => {
       let paramsS = params.join(" ");
       let msg = {
         text: `${instance.prefix} ${method} ${paramsS}`
-      };
-
-      parser(msg);
-
-      _sendMessage.should.be.calledWithExactly(msg, method, params);
-    });
-
-    it("can be called with message starting with `.method` format", () => {
-      let method = "testRegisteredMethod";
-      let params = [ "test", "params" ];
-      let paramsS = params.join(" ");
-      let msg = {
-        text: `.${method} ${paramsS}`
       };
 
       parser(msg);
@@ -440,7 +415,7 @@ describe("ghee decorator", () => {
     it("can register a new listener", () => {
       ghee(Object, "testRegisteredMethod");
 
-      instance._isRegistered(".testRegisteredMethod").should.be.true;
+      global._gheeListeners.should.be.an('object').that.has.a.property("testRegisteredMethod");
     });
   });
 });
