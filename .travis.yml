@@ -1,5 +1,11 @@
 language: node_js
 node_js:
+  - "node"
+  - "lts/*"
+  - "9"
+  - "8"
+  - "7"
+  - "6"
   - "5"
 after_success:
   - npm run test-coverage
