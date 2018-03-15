@@ -95,7 +95,6 @@ export class Ghee {
       this.web.users.info(msg.user),
       this.web.conversations.info(msg.channel),
       (from, channel) => {
-
         let response = this[global._gheeListeners[method]](params, from.user, channel.channel, msg);
 
         if (response) {
