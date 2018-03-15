@@ -1,26 +1,15 @@
-export default class Attachments {
+export class Field {
   constructor() {
-    this.attachments = []
-    this.hasAttachments = true;
-    this.text = null;
-  }
-
-  add() {
-    let attachment = new Attachment();
-    this.attachments.push(attachment.attachment);
-
-    return attachment;
-  }
-
-  toString() {
-    return JSON.stringify(this.attachments, null, 2);
+    this.title = "";
+    this.value = "";
+    this.short = true;
   }
 }
 
-class Attachment {
+export class Attachment {
   constructor() {
     this.attachment = {
-      'mrkdwn_in': [ 'pretext', 'text', 'fields' ]
+      "mrkdwn_in": [ "pretext", "text", "fields" ]
     };
   }
 
@@ -58,34 +47,34 @@ class Attachment {
     return this.attachment.pretext;
   }
 
-  set author_name(value) {
+  set authorName(value) {
     if (value) {
-      this.attachment.author_name = value;
+      this.attachment.authorName = value;
     }
   }
 
-  get author_name() {
-    return this.attachment.author_name;
+  get authorName() {
+    return this.attachment.authorName;
   }
 
-  set author_link(value) {
+  set authorLink(value) {
     if (value) {
-      this.attachment.author_link = value;
+      this.attachment.authorLink = value;
     }
   }
 
-  get author_link() {
-    return this.attachment.author_link;
+  get authorLink() {
+    return this.attachment.authorLink;
   }
 
-  set author_icon(value) {
+  set authorIcon(value) {
     if (value) {
-      this.attachment.author_icon = value;
+      this.attachment.authorIcon = value;
     }
   }
 
-  get author_icon() {
-    return this.attachment.author_icon;
+  get authorIcon() {
+    return this.attachment.authorIcon;
   }
 
   set title(value) {
@@ -98,14 +87,14 @@ class Attachment {
     return this.attachment.title;
   }
 
-  set title_link(value) {
+  set titleLink(value) {
     if (value) {
-      this.attachment.title_link = value;
+      this.attachment.titleLink = value;
     }
   }
 
-  get title_link() {
-    return this.attachment.title_link;
+  get titleLink() {
+    return this.attachment.titleLink;
   }
 
   set text(value) {
@@ -118,24 +107,24 @@ class Attachment {
     return this.attachment.text;
   }
 
-  set image_url(value) {
+  set imageURL(value) {
     if (value) {
-      this.attachment.image_url = value;
+      this.attachment.imageURL = value;
     }
   }
 
-  get image_url() {
-    return this.attachment.image_url;
+  get imageURL() {
+    return this.attachment.imageURL;
   }
 
-  set thumb_url(value) {
+  set thumbURL(value) {
     if (value) {
-      this.attachment.thumb_url = value;
+      this.attachment.thumbURL = value;
     }
   }
 
-  get thumb_url() {
-    return this.attachment.thumb_url;
+  get thumbURL() {
+    return this.attachment.thumbURL;
   }
 
   set footer(value) {
@@ -148,14 +137,14 @@ class Attachment {
     return this.attachment.footer;
   }
 
-  set footer_icon(value) {
+  set footerIcon(value) {
     if (value) {
-      this.attachment.footer_icon = value;
+      this.attachment.footerIcon = value;
     }
   }
 
-  get footer_icon() {
-    return this.attachment.footer_icon;
+  get footerIcon() {
+    return this.attachment.footerIcon;
   }
 
   set timestamp(value) {
@@ -168,8 +157,8 @@ class Attachment {
     return this.attachment.ts;
   }
 
-  add_field(name, value, short = false) {
-    if (!this.attachment.fields) {
+  addField() {
+    if (!("fields" in this.attachment)) {
       this.attachment.fields = [];
     }
 
@@ -179,12 +168,21 @@ class Attachment {
   }
 }
 
-class Field {
+export class Attachments {
   constructor() {
-    this.title = '';
-    this.value = '';
-    this.short = true;
+    this.attachments = [];
+    this.hasAttachments = true;
+    this.text = null;
+  }
+
+  add() {
+    let attachment = new Attachment();
+    this.attachments.push(attachment.attachment);
+
+    return attachment;
+  }
+
+  toString() {
+    return JSON.stringify(this.attachments, null, 2);
   }
 }
-
-
