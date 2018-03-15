@@ -399,6 +399,7 @@ describe("Ghee class", () => {
 
 describe("ghee decorator", () => {
   describe("#ghee()", () => {
+/*
     let token = Math.random().toString(36).substr(2, 20);
     let rtmclient = new MockRtmClient();
     let webclient = new MockWebClient();
@@ -411,7 +412,7 @@ describe("ghee decorator", () => {
       testRegisteredMethod() { }
     };
     let instance = new Bot(token, rtmclient, webclient);
-
+*/
     it("can register a new listener", () => {
       ghee(Object, "testRegisteredMethod");
 
